@@ -5,16 +5,14 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
+    private static final double MS_TO_HOURS = 1000. * 60. * 60.;
+
     public void calculateFare(Ticket ticket){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
 
-        int inHour = ticket.getInTime().getHours();
-        int outHour = ticket.getOutTime().getHours();
-
-        //TODO: Some tests are failing here. Need to check if this logic is correct
-        int duration = outHour - inHour;
+        final double duration = (ticket.getOutTime().getTime() - ticket.getInTime().getTime()) / MS_TO_HOURS;
 
         switch (ticket.getParkingSpot().getParkingType()){
             case CAR: {
