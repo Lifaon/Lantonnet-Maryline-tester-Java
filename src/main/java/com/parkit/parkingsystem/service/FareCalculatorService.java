@@ -7,7 +7,11 @@ public class FareCalculatorService {
 
     private static final double MS_TO_HOURS = 1000. * 60. * 60.;
 
-    public void calculateFare(Ticket ticket){
+    public void calculateFare(Ticket ticket) {
+        calculateFare(ticket, false);
+    }
+
+    public void calculateFare(Ticket ticket, Boolean discount){
         if( (ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime())) ){
             throw new IllegalArgumentException("Out time provided is incorrect:"+ticket.getOutTime().toString());
         }
@@ -28,6 +32,10 @@ public class FareCalculatorService {
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
+        }
+
+        if (discount) {
+            ticket.setPrice(ticket.getPrice() * 0.95);
         }
     }
 }
