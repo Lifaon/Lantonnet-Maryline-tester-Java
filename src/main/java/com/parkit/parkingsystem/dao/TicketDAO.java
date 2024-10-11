@@ -19,6 +19,27 @@ public class TicketDAO {
 
     public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
+    public int getAvailableId() {
+        Connection con = null;
+        int id = -1;
+        try {
+            con = dataBaseConfig.getConnection();
+            while (true) {
+                id = (int)(Math.random() * (double)Integer.MAX_VALUE);
+                PreparedStatement ps = con.prepareStatement(DBConstants.IS_AVAILABLE_ID);
+                ps.setInt(1,id);
+                ResultSet rs = ps.executeQuery();
+                if (!rs.next())
+                   break;
+            }
+        } catch (Exception ex){
+            logger.error("Error fetching next available slot",ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return id;
+    }
+
     public boolean saveTicket(Ticket ticket){
         Connection con = null;
         try {
